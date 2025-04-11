@@ -1,316 +1,375 @@
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { 
   Search, 
   ArrowUpRight, 
   ArrowDownRight, 
-  ChevronDown, 
-  BarChart4,
-  Star
+  Filter, 
+  SlidersHorizontal, 
+  Star, 
+  TrendingUp,
+  Building,
+  Clock,
+  DollarSign
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockStocks } from "@/utils/mockData";
-import { cn } from "@/lib/utils";
 
-type StockSector = "Technology" | "Healthcare" | "Finance" | "Consumer" | "Energy" | "All";
-type SortOption = "name" | "price" | "change" | "marketCap";
-type SortDirection = "asc" | "desc";
+const stockSectors = [
+  "All", "Technology", "Healthcare", "Financial", "Consumer", "Energy", "Industrial"
+];
+
+const popularStocks = [
+  { 
+    symbol: "AAPL", 
+    name: "Apple Inc.", 
+    price: 173.72, 
+    change: +1.12, 
+    changePercent: +0.65, 
+    sector: "Technology",
+    marketCap: "2.71T",
+    volume: "52.4M"
+  },
+  { 
+    symbol: "MSFT", 
+    name: "Microsoft Corp.", 
+    price: 425.52, 
+    change: +2.76, 
+    changePercent: +0.65, 
+    sector: "Technology",
+    marketCap: "3.16T",
+    volume: "18.2M"
+  },
+  { 
+    symbol: "GOOGL", 
+    name: "Alphabet Inc.", 
+    price: 148.74, 
+    change: +0.31, 
+    changePercent: +0.21, 
+    sector: "Technology",
+    marketCap: "1.87T",
+    volume: "15.9M"
+  },
+  { 
+    symbol: "AMZN", 
+    name: "Amazon.com Inc.", 
+    price: 178.95, 
+    change: +0.68, 
+    changePercent: +0.38, 
+    sector: "Consumer",
+    marketCap: "1.86T",
+    volume: "30.1M"
+  },
+  { 
+    symbol: "NVDA", 
+    name: "NVIDIA Corp.", 
+    price: 880.08, 
+    change: -12.30, 
+    changePercent: -1.38, 
+    sector: "Technology",
+    marketCap: "2.17T",
+    volume: "40.8M"
+  },
+  { 
+    symbol: "META", 
+    name: "Meta Platforms", 
+    price: 474.99, 
+    change: +1.21, 
+    changePercent: +0.26, 
+    sector: "Technology",
+    marketCap: "1.21T",
+    volume: "12.6M"
+  },
+  { 
+    symbol: "BRK.B", 
+    name: "Berkshire Hathaway", 
+    price: 406.15, 
+    change: -1.13, 
+    changePercent: -0.28, 
+    sector: "Financial",
+    marketCap: "891.5B",
+    volume: "3.2M"
+  },
+  { 
+    symbol: "JPM", 
+    name: "JPMorgan Chase", 
+    price: 191.20, 
+    change: -0.52, 
+    changePercent: -0.27, 
+    sector: "Financial",
+    marketCap: "551.2B",
+    volume: "7.1M"
+  },
+  { 
+    symbol: "JNJ", 
+    name: "Johnson & Johnson", 
+    price: 151.48, 
+    change: +0.87, 
+    changePercent: +0.58, 
+    sector: "Healthcare",
+    marketCap: "364.5B",
+    volume: "5.4M"
+  },
+  { 
+    symbol: "XOM", 
+    name: "Exxon Mobil Corp.", 
+    price: 118.64, 
+    change: -1.02, 
+    changePercent: -0.85, 
+    sector: "Energy",
+    marketCap: "471.8B",
+    volume: "13.2M"
+  }
+];
+
+const trendingStocks = [
+  { 
+    symbol: "TSLA", 
+    name: "Tesla Inc.", 
+    price: 171.05, 
+    change: -4.32, 
+    changePercent: -2.46, 
+    sector: "Consumer",
+    marketCap: "544.7B",
+    volume: "96.3M"
+  },
+  { 
+    symbol: "AMD", 
+    name: "Advanced Micro Devices", 
+    price: 164.17, 
+    change: +3.61, 
+    changePercent: +2.25, 
+    sector: "Technology",
+    marketCap: "265.2B",
+    volume: "57.8M"
+  },
+  { 
+    symbol: "CRM", 
+    name: "Salesforce Inc.", 
+    price: 301.91, 
+    change: +4.56, 
+    changePercent: +1.53, 
+    sector: "Technology",
+    marketCap: "292.4B",
+    volume: "8.7M"
+  },
+  { 
+    symbol: "PFE", 
+    name: "Pfizer Inc.", 
+    price: 26.63, 
+    change: -0.22, 
+    changePercent: -0.82, 
+    sector: "Healthcare",
+    marketCap: "150.4B",
+    volume: "34.5M"
+  }
+];
 
 const Stocks = () => {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSector, setSelectedSector] = useState<StockSector>("All");
-  const [sortBy, setSortBy] = useState<SortOption>("name");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [selectedSector, setSelectedSector] = useState("All");
   
-  const sectors: StockSector[] = ["All", "Technology", "Healthcare", "Finance", "Consumer", "Energy"];
-  
-  const toggleFavorite = (symbol: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFavorites(prev => 
-      prev.includes(symbol) 
-        ? prev.filter(s => s !== symbol) 
-        : [...prev, symbol]
-    );
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
   };
   
-  const filteredStocks = mockStocks
-    .filter(stock => {
-      // Filter by search query
-      const matchesQuery = stock.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         stock.symbol.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      // Filter by sector
-      const matchesSector = selectedSector === "All" || stock.sector === selectedSector;
-      
-      return matchesQuery && matchesSector;
-    })
-    .sort((a, b) => {
-      // Sort logic
-      if (sortBy === "name") {
-        return sortDirection === "asc" 
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      } else if (sortBy === "price") {
-        return sortDirection === "asc"
-          ? a.price - b.price
-          : b.price - a.price;
-      } else if (sortBy === "change") {
-        return sortDirection === "asc"
-          ? a.changePercent - b.changePercent
-          : b.changePercent - a.changePercent;
-      } else { // marketCap
-        return sortDirection === "asc"
-          ? a.marketCap - b.marketCap
-          : b.marketCap - a.marketCap;
-      }
-    });
-  
-  const toggleSort = (option: SortOption) => {
-    if (sortBy === option) {
-      setSortDirection(prev => prev === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(option);
-      setSortDirection("asc");
-    }
-  };
-  
-  const getSectorStocks = (sector: StockSector) => {
-    if (sector === "All") return filteredStocks;
-    return filteredStocks.filter(stock => stock.sector === sector);
-  };
-  
-  const getFavoriteStocks = () => {
-    return filteredStocks.filter(stock => favorites.includes(stock.symbol));
-  };
-  
-  const renderSortIcon = (option: SortOption) => {
-    if (sortBy !== option) return null;
-    
-    return (
-      <ChevronDown 
-        size={16} 
-        className={cn(
-          "ml-1 transition-transform", 
-          sortDirection === "desc" && "transform rotate-180"
-        )} 
-      />
-    );
-  };
+  const filteredStocks = popularStocks.filter(stock => {
+    const matchesSearch = stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          stock.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSector = selectedSector === "All" || stock.sector === selectedSector;
+    return matchesSearch && matchesSector;
+  });
   
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">Stocks</h1>
-        
-        <div className="flex w-full md:w-auto">
-          <div className="relative flex-1 md:w-80">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search stocks by name or symbol..."
-              className="pl-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+      <h1 className="text-3xl font-bold">Stocks</h1>
+      
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-muted-foreground" />
         </div>
+        <Input
+          type="text"
+          placeholder="Search stocks by name or symbol..."
+          className="pl-10 pr-4"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
       </div>
       
-      <Tabs defaultValue="all">
-        <TabsList className="mb-4 flex overflow-x-auto pb-1 scrollbar-none">
-          <TabsTrigger value="all">All Stocks</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          <TabsTrigger value="trending">Trending</TabsTrigger>
-          <TabsTrigger value="gainers">Top Gainers</TabsTrigger>
-          <TabsTrigger value="losers">Top Losers</TabsTrigger>
+      <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto scrollbar-none">
+        {stockSectors.map((sector) => (
+          <Button
+            key={sector}
+            variant={selectedSector === sector ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSelectedSector(sector)}
+            className="text-nowrap"
+          >
+            {sector}
+          </Button>
+        ))}
+      </div>
+      
+      <Tabs defaultValue="popular" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="popular">
+            <Star className="h-4 w-4 mr-2" />
+            Popular
+          </TabsTrigger>
+          <TabsTrigger value="trending">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Trending
+          </TabsTrigger>
         </TabsList>
         
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {sectors.map((sector) => (
-            <Button
-              key={sector}
-              variant={selectedSector === sector ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedSector(sector)}
-              className="whitespace-nowrap"
-            >
-              {sector}
-            </Button>
-          ))}
-        </div>
+        <TabsContent value="popular" className="mt-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              {filteredStocks.map((stock) => (
+                <Link to={`/stocks/${stock.symbol}`} key={stock.symbol}>
+                  <Card className="stock-card">
+                    <CardContent className="p-4">
+                      <div className="flex flex-col sm:flex-row justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h2 className="text-lg font-bold">{stock.symbol}</h2>
+                                <Badge variant="outline">{stock.sector}</Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground">{stock.name}</p>
+                            </div>
+                            <div className={`flex items-center ${
+                              stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
+                            }`}>
+                              {stock.changePercent >= 0 ? (
+                                <ArrowUpRight size={16} />
+                              ) : (
+                                <ArrowDownRight size={16} />
+                              )}
+                              <span className="font-medium">
+                                {stock.changePercent >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="text-xl font-bold mb-1">${stock.price.toFixed(2)}</div>
+                          <div className="grid grid-cols-3 gap-2 text-sm">
+                            <div className="flex items-center gap-1">
+                              <Building className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className="text-muted-foreground">Cap:</span>
+                              <span>{stock.marketCap}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className="text-muted-foreground">Vol:</span>
+                              <span>{stock.volume}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className={`${
+                                stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
+                              }`}>
+                                {stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            
+            {filteredStocks.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No stocks match your search criteria.</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-2"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedSector("All");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </div>
+        </TabsContent>
         
-        <div className="bg-muted/30 p-2 rounded-lg mb-4">
-          <div className="grid grid-cols-12 gap-4 text-sm font-medium p-2">
-            <div className="col-span-6 sm:col-span-5 flex items-center">
-              <button 
-                className="flex items-center" 
-                onClick={() => toggleSort("name")}
-              >
-                Company {renderSortIcon("name")}
-              </button>
-            </div>
-            <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-              <button 
-                className="flex items-center" 
-                onClick={() => toggleSort("price")}
-              >
-                Price {renderSortIcon("price")}
-              </button>
-            </div>
-            <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-              <button 
-                className="flex items-center" 
-                onClick={() => toggleSort("change")}
-              >
-                Change {renderSortIcon("change")}
-              </button>
-            </div>
-            <div className="hidden sm:flex sm:col-span-3 items-center justify-end">
-              <button 
-                className="flex items-center" 
-                onClick={() => toggleSort("marketCap")}
-              >
-                Market Cap {renderSortIcon("marketCap")}
-              </button>
+        <TabsContent value="trending" className="mt-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              {trendingStocks.map((stock) => (
+                <Link to={`/stocks/${stock.symbol}`} key={stock.symbol}>
+                  <Card className="stock-card">
+                    <CardContent className="p-4">
+                      <div className="flex flex-col sm:flex-row justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h2 className="text-lg font-bold">{stock.symbol}</h2>
+                                <Badge variant="outline">{stock.sector}</Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground">{stock.name}</p>
+                            </div>
+                            <div className={`flex items-center ${
+                              stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
+                            }`}>
+                              {stock.changePercent >= 0 ? (
+                                <ArrowUpRight size={16} />
+                              ) : (
+                                <ArrowDownRight size={16} />
+                              )}
+                              <span className="font-medium">
+                                {stock.changePercent >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="text-xl font-bold mb-1">${stock.price.toFixed(2)}</div>
+                          <div className="grid grid-cols-3 gap-2 text-sm">
+                            <div className="flex items-center gap-1">
+                              <Building className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className="text-muted-foreground">Cap:</span>
+                              <span>{stock.marketCap}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className="text-muted-foreground">Vol:</span>
+                              <span>{stock.volume}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className={`${
+                                stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
+                              }`}>
+                                {stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
-        
-        <TabsContent value="all" className="space-y-3">
-          {filteredStocks.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">No stocks match your search criteria.</p>
-            </div>
-          ) : (
-            filteredStocks.map((stock) => (
-              <div 
-                key={stock.symbol}
-                className="grid grid-cols-12 gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                onClick={() => navigate(`/stocks/${stock.symbol}`)}
-              >
-                <div className="col-span-6 sm:col-span-5 flex items-center gap-3">
-                  <button 
-                    className="text-yellow-400 hover:text-yellow-500"
-                    onClick={(e) => toggleFavorite(stock.symbol, e)}
-                  >
-                    <Star 
-                      size={18} 
-                      className={favorites.includes(stock.symbol) ? "fill-yellow-400" : ""} 
-                    />
-                  </button>
-                  
-                  {stock.logoUrl ? (
-                    <div className="w-10 h-10 rounded-md flex items-center justify-center bg-white/90 p-1 shadow-sm">
-                      <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 object-contain" />
-                    </div>
-                  ) : (
-                    <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center text-white font-semibold">
-                      {stock.symbol.substring(0, 2)}
-                    </div>
-                  )}
-                  
-                  <div>
-                    <h3 className="font-medium">{stock.symbol}</h3>
-                    <p className="text-sm text-muted-foreground truncate">{stock.name}</p>
-                  </div>
-                </div>
-                
-                <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-                  <p className="font-medium">${stock.price.toFixed(2)}</p>
-                </div>
-                
-                <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-                  <div className={cn(
-                    "flex items-center gap-1",
-                    stock.change >= 0 ? "text-apple-gain" : "text-apple-loss"
-                  )}>
-                    {stock.change >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-                    <span>{Math.abs(stock.changePercent).toFixed(2)}%</span>
-                  </div>
-                </div>
-                
-                <div className="hidden sm:flex sm:col-span-3 items-center justify-end">
-                  <p className="font-medium">${(stock.marketCap / 1000000000).toFixed(2)}B</p>
-                </div>
-              </div>
-            ))
-          )}
         </TabsContent>
-        
-        <TabsContent value="favorites" className="space-y-3">
-          {getFavoriteStocks().length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">You haven't added any favorites yet.</p>
-              <p className="text-sm text-muted-foreground mt-1">Click the star icon next to a stock to add it to your favorites.</p>
-            </div>
-          ) : (
-            getFavoriteStocks().map((stock) => (
-              <div 
-                key={stock.symbol}
-                className="grid grid-cols-12 gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                onClick={() => navigate(`/stocks/${stock.symbol}`)}
-              >
-                {/* Content is the same as the "all" tab */}
-                <div className="col-span-6 sm:col-span-5 flex items-center gap-3">
-                  <button 
-                    className="text-yellow-400 hover:text-yellow-500"
-                    onClick={(e) => toggleFavorite(stock.symbol, e)}
-                  >
-                    <Star size={18} className="fill-yellow-400" />
-                  </button>
-                  
-                  {stock.logoUrl ? (
-                    <div className="w-10 h-10 rounded-md flex items-center justify-center bg-white/90 p-1 shadow-sm">
-                      <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 object-contain" />
-                    </div>
-                  ) : (
-                    <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center text-white font-semibold">
-                      {stock.symbol.substring(0, 2)}
-                    </div>
-                  )}
-                  
-                  <div>
-                    <h3 className="font-medium">{stock.symbol}</h3>
-                    <p className="text-sm text-muted-foreground truncate">{stock.name}</p>
-                  </div>
-                </div>
-                
-                <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-                  <p className="font-medium">${stock.price.toFixed(2)}</p>
-                </div>
-                
-                <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
-                  <div className={cn(
-                    "flex items-center gap-1",
-                    stock.change >= 0 ? "text-apple-gain" : "text-apple-loss"
-                  )}>
-                    {stock.change >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-                    <span>{Math.abs(stock.changePercent).toFixed(2)}%</span>
-                  </div>
-                </div>
-                
-                <div className="hidden sm:flex sm:col-span-3 items-center justify-end">
-                  <p className="font-medium">${(stock.marketCap / 1000000000).toFixed(2)}B</p>
-                </div>
-              </div>
-            ))
-          )}
-        </TabsContent>
-        
-        {/* Other tabs would have similar content */}
-        {["trending", "gainers", "losers"].map((tab) => (
-          <TabsContent key={tab} value={tab} className="space-y-3">
-            <div className="bg-muted/30 p-6 rounded-lg text-center">
-              <BarChart4 className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
-              <h3 className="text-lg font-medium mb-1">Coming Soon</h3>
-              <p className="text-sm text-muted-foreground">This feature is under development.</p>
-            </div>
-          </TabsContent>
-        ))}
       </Tabs>
     </div>
   );

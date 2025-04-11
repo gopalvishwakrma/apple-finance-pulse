@@ -1,43 +1,115 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, ArrowDownRight, BarChart, TrendingUp, CreditCard, DollarSign, Info, Sun, Moon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Toggle } from "@/components/ui/toggle";
 import PortfolioSummary from "@/components/dashboard/PortfolioSummary";
+import PortfolioPulse from "@/components/dashboard/PortfolioPulse";
 import TopStocks from "@/components/dashboard/TopStocks";
 import WatchlistCard from "@/components/dashboard/WatchlistCard";
-import PortfolioPulse from "@/components/dashboard/PortfolioPulse";
 import NewsCarousel from "@/components/dashboard/NewsCarousel";
-import { toast } from "sonner";
+import MarketOverview from "@/components/dashboard/MarketOverview";
+
+// Mock data for quick stats
+const quickStats = [
+  {
+    title: "Top Gainer",
+    value: "NVDA",
+    change: "+4.25%",
+    isPositive: true,
+  },
+  {
+    title: "Top Loser",
+    value: "TSLA",
+    change: "-2.87%",
+    isPositive: false,
+  },
+  {
+    title: "Total Assets",
+    value: "$124,592.05",
+    change: "+2.4%",
+    isPositive: true,
+  },
+  {
+    title: "Cash Balance",
+    value: "$14,350.23",
+    change: "+$1,200",
+    isPositive: true,
+  },
+];
 
 const Dashboard = () => {
+  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    return localStorage.getItem("theme") as "light" | "dark" || "light";
+  });
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
+
   useEffect(() => {
-    // Simulate a welcome toast
-    setTimeout(() => {
-      toast.success("Welcome back, Jane! Your portfolio is up 1.23% today.", {
-        description: "Check out your latest performance metrics."
-      });
-    }, 1000);
+    setMounted(true);
   }, []);
-  
+
+  if (!mounted) return null;
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Main content - left side */}
-        <div className="md:col-span-8 space-y-6">
+    <div className="space-y-6 animate-fade-in pb-12">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <div className="flex items-center gap-2">
+          <Toggle pressed={theme === "dark"} onPressedChange={toggleTheme}>
+            {theme === "light" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Toggle>
+          <Button variant="outline" size="sm">
+            <TrendingUp className="mr-2 h-4 w-4" />
+            View Reports
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {quickStats.map((stat, i) => (
+          <Card key={i} className="shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start">
+                <p className="text-sm text-muted-foreground">{stat.title}</p>
+                {stat.isPositive ? (
+                  <ArrowUpRight className="text-apple-gain" size={18} />
+                ) : (
+                  <ArrowDownRight className="text-apple-loss" size={18} />
+                )}
+              </div>
+              <p className="text-2xl font-bold mt-1">{stat.value}</p>
+              <p className={cn("text-sm mt-1", stat.isPositive ? "text-apple-gain" : "text-apple-loss")}>
+                {stat.change}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
           <PortfolioSummary />
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <TopStocks />
-            <WatchlistCard />
-          </div>
-          
-          <NewsCarousel />
+          <MarketOverview />
+          <WatchlistCard />
         </div>
-        
-        {/* Sidebar - right side */}
-        <div className="md:col-span-4 space-y-6">
+        <div className="space-y-6">
           <PortfolioPulse />
+          <TopStocks />
         </div>
+      </div>
+
+      <div className="pt-4">
+        <NewsCarousel />
       </div>
     </div>
   );

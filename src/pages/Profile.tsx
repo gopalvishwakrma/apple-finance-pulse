@@ -9,8 +9,8 @@ import {
   Gauge,
   BarChart,
   ClipboardList,
-  Plus,
-  Minus
+  PlusIcon,
+  MinusIcon
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -180,28 +180,28 @@ const Profile = () => {
                   <CardDescription>Track your progress as an investor</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative pl-6 border-l-2 border-border space-y-8">
+                  <div className="relative pl-6 md:pl-6 border-l-2 border-border space-y-6 md:space-y-8">
                     {mockProfile.milestones.map((milestone, index) => (
                       <div key={index} className="relative">
-                        <div className={`absolute -left-[25px] top-0 w-12 h-12 rounded-full ${milestoneColors[index % milestoneColors.length]} flex items-center justify-center shadow-md`}>
-                          <div className="text-white font-bold text-lg">{index + 1}</div>
+                        <div className={`absolute -left-[25px] top-0 w-10 h-10 md:w-12 md:h-12 rounded-full ${milestoneColors[index % milestoneColors.length]} flex items-center justify-center shadow-md`}>
+                          <div className="text-white font-bold text-base md:text-lg">{index + 1}</div>
                         </div>
-                        <div className="ml-6 pt-1.5">
-                          <h3 className="text-lg font-semibold">{milestone.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-1">{milestone.date}</p>
-                          <p className="text-sm">{milestone.description}</p>
+                        <div className="ml-4 md:ml-6 pt-1">
+                          <h3 className="text-base md:text-lg font-semibold">{milestone.title}</h3>
+                          <p className="text-xs md:text-sm text-muted-foreground mb-1">{milestone.date}</p>
+                          <p className="text-xs md:text-sm">{milestone.description}</p>
                         </div>
                       </div>
                     ))}
                     
                     <div className="relative">
-                      <div className="absolute -left-[25px] top-0 w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground flex items-center justify-center">
-                        <div className="text-muted-foreground font-bold text-lg">?</div>
+                      <div className="absolute -left-[25px] top-0 w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-dashed border-muted-foreground flex items-center justify-center">
+                        <div className="text-muted-foreground font-bold text-base md:text-lg">?</div>
                       </div>
-                      <div className="ml-6 pt-1.5">
-                        <h3 className="text-lg font-semibold">Your Next Milestone</h3>
-                        <p className="text-sm text-muted-foreground mb-1">Coming soon...</p>
-                        <p className="text-sm">Keep investing to reach your next achievement!</p>
+                      <div className="ml-4 md:ml-6 pt-1">
+                        <h3 className="text-base md:text-lg font-semibold">Your Next Milestone</h3>
+                        <p className="text-xs md:text-sm text-muted-foreground mb-1">Coming soon...</p>
+                        <p className="text-xs md:text-sm">Keep investing to reach your next achievement!</p>
                       </div>
                     </div>
                   </div>
@@ -227,8 +227,8 @@ const Profile = () => {
                             transaction.type === "buy" ? "bg-apple-gain/10 text-apple-gain" : "bg-apple-loss/10 text-apple-loss"
                           }`}>
                             {transaction.type === "buy" ? 
-                              <Plus className="h-5 w-5" /> : 
-                              <Minus className="h-5 w-5" />
+                              <PlusIcon className="h-5 w-5" /> : 
+                              <MinusIcon className="h-5 w-5" />
                             }
                           </div>
                           <div>

@@ -10,7 +10,9 @@ import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Portfolio from "./pages/Portfolio";
 import StockDetails from "./pages/StockDetails";
+import Stocks from "./pages/Stocks";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import Insights from "./pages/Insights";
 import NotFound from "./pages/NotFound";
 
@@ -26,8 +28,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/stocks" element={<Stocks />} />
             <Route path="/stocks/:symbol" element={<StockDetails />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/insights" element={<Insights />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

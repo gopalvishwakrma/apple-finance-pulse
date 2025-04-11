@@ -56,7 +56,11 @@ const PortfolioPulse = () => {
                   {diversificationScore}/100
                 </span>
               </div>
-              <Progress value={diversificationScore} className="h-2" indicatorClassName={getProgressColor(diversificationScore)} />
+              <Progress value={diversificationScore} className="h-2" 
+                style={{ 
+                  '--progress-background': getProgressColor(diversificationScore)
+                } as React.CSSProperties} 
+              />
             </div>
             
             <div className="space-y-2">
@@ -66,7 +70,12 @@ const PortfolioPulse = () => {
                   {riskScore}/100
                 </span>
               </div>
-              <Progress value={riskScore} className="h-2" indicatorClassName={riskScore <= 30 ? "bg-apple-gain" : riskScore <= 70 ? "bg-amber-500" : "bg-apple-loss"} />
+              <Progress value={riskScore} className="h-2" 
+                style={{ 
+                  '--progress-background': riskScore <= 30 ? "var(--apple-gain)" : 
+                                          riskScore <= 70 ? "rgb(245, 158, 11)" : "var(--apple-loss)"
+                } as React.CSSProperties} 
+              />
             </div>
             
             <div className="space-y-2">
@@ -76,7 +85,11 @@ const PortfolioPulse = () => {
                   {performanceScore}/100
                 </span>
               </div>
-              <Progress value={performanceScore} className="h-2" indicatorClassName={getProgressColor(performanceScore)} />
+              <Progress value={performanceScore} className="h-2" 
+                style={{ 
+                  '--progress-background': getProgressColor(performanceScore)
+                } as React.CSSProperties} 
+              />
             </div>
           </div>
           

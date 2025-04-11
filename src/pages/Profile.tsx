@@ -8,7 +8,9 @@ import {
   Calendar,
   Gauge,
   BarChart,
-  ClipboardList
+  ClipboardList,
+  Plus,
+  Minus
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

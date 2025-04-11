@@ -42,32 +42,13 @@ const quickStats = [
 ];
 
 const Dashboard = () => {
-  const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    return localStorage.getItem("theme") as "light" | "dark" || "light";
-  });
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-  };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
+  // Remove the theme state from Dashboard since it's now handled in MainLayout
+  
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       <div className="flex items-center justify-between">
         <h1 className="heading-lg text-gradient">Financial Overview</h1>
         <div className="flex items-center gap-2">
-          <Toggle pressed={theme === "dark"} onPressedChange={toggleTheme} className="premium-shadow-sm">
-            {theme === "light" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Toggle>
           <Button variant="outline" size="sm" className="gap-1.5 premium-shadow-sm">
             <TrendingUp className="h-4 w-4" />
             View Reports

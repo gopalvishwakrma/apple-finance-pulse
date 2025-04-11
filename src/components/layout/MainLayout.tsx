@@ -13,8 +13,10 @@ interface MainLayoutProps {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const isMobile = useIsMobile();
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check for saved theme preference
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" || "light";
     setTheme(savedTheme);
@@ -28,6 +30,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
+  // Don't render with SSR to avoid hydration mismatch
+  if (!mounted) return null;
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -39,12 +44,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               pressed={theme === "dark"}
               onPressedChange={toggleTheme}
               aria-label="Toggle dark mode"
-              className="ml-auto"
+              className="premium-shadow-sm"
             >
               {theme === "light" ? (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-4 w-4" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-4 w-4" />
               )}
             </Toggle>
           </div>

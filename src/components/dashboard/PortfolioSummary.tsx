@@ -98,14 +98,18 @@ const PortfolioSummary = () => {
             />
           </div>
           
-          <div className="flex flex-wrap gap-2">
+          {/* Fixed the time period buttons layout for better responsiveness */}
+          <div className="grid grid-cols-5 gap-1 sm:gap-2">
             {(["1D", "1W", "1M", "3M", "1Y"] as TimeRange[]).map((range) => (
               <Button
                 key={range}
                 variant={selectedRange === range ? "default" : "outline"}
                 size="sm"
                 onClick={() => changeTimeRange(range)}
-                className={selectedRange === range ? "" : "text-muted-foreground"}
+                className={cn(
+                  selectedRange === range ? "" : "text-muted-foreground",
+                  "px-1 sm:px-3 text-xs sm:text-sm"
+                )}
               >
                 {range}
               </Button>

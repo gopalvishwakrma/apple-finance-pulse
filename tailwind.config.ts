@@ -21,6 +21,8 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ['SF Pro Display', 'system-ui', 'sans-serif'],
+				display: ['SF Pro Display', 'system-ui', 'sans-serif'],
+				text: ['SF Pro Text', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -106,20 +108,26 @@ export default {
 				shimmer: {
 					'0%': { backgroundPosition: '-1000px 0' },
 					'100%': { backgroundPosition: '1000px 0' }
-				}
+				},
+				'scale-in': {
+					'0%': { transform: 'scale(0.95)', opacity: '0' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'pulse-slow': 'pulse-slow 3s infinite ease-in-out',
-				shimmer: 'shimmer 2s infinite linear'
+				shimmer: 'shimmer 2s infinite linear',
+				'scale-in': 'scale-in 0.3s ease-out',
 			},
 			backgroundImage: {
 				'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
 				'card-gradient': 'linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
 				'primary-gradient': 'linear-gradient(90deg, #9b87f5, #7E69AB)',
-				'secondary-gradient': 'linear-gradient(90deg, #F1F0FB, #E5E3F7)'
+				'secondary-gradient': 'linear-gradient(90deg, #F1F0FB, #E5E3F7)',
+				'premium-gradient': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)/0.8))',
 			}
 		}
 	},

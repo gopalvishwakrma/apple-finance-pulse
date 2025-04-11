@@ -1,4 +1,5 @@
 
+@import './styles/fonts.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,27 +93,26 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
   
-  @font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff');
-    font-weight: 400;
-    font-style: normal;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
   }
   
-  @font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff');
-    font-weight: 500;
-    font-style: normal;
+  h1 {
+    @apply text-3xl font-semibold md:text-4xl;
+    letter-spacing: -0.02em;
   }
   
-  @font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff');
-    font-weight: 700;
-    font-style: normal;
+  h2 {
+    @apply text-2xl font-medium md:text-3xl;
+    letter-spacing: -0.01em;
+  }
+  
+  p {
+    @apply text-base text-foreground/90 font-text;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -123,6 +123,14 @@
   
   .frosted-glass {
     @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-md;
+  }
+  
+  .premium-card {
+    @apply bg-card border border-border/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  .premium-button {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-5 py-2.5 transition-all duration-200;
   }
   
   .stock-card {
@@ -136,6 +144,29 @@
   .apple-button {
     @apply bg-primary rounded-full px-5 py-2.5 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5;
   }
+  
+  .heading-xl {
+    @apply text-4xl font-semibold tracking-tight;
+    letter-spacing: -0.03em;
+  }
+  
+  .heading-lg {
+    @apply text-3xl font-semibold tracking-tight;
+    letter-spacing: -0.02em;
+  }
+  
+  .heading-md {
+    @apply text-2xl font-medium tracking-tight;
+    letter-spacing: -0.01em;
+  }
+  
+  .heading-sm {
+    @apply text-xl font-medium tracking-tight;
+  }
+  
+  .badge-premium {
+    @apply bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
 }
 
 @layer utilities {
@@ -145,5 +176,22 @@
   
   .text-gradient {
     @apply bg-clip-text text-transparent bg-primary-gradient;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .premium-shadow {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+  
+  .premium-shadow-sm {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   }
 }

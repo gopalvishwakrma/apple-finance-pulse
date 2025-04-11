@@ -186,7 +186,7 @@ const Stocks = () => {
   
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      <h1 className="text-3xl font-bold">Stocks</h1>
+      <h1 className="heading-lg text-gradient">Stocks</h1>
       
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -195,20 +195,20 @@ const Stocks = () => {
         <Input
           type="text"
           placeholder="Search stocks by name or symbol..."
-          className="pl-10 pr-4"
+          className="pl-10 pr-4 apple-input"
           value={searchQuery}
           onChange={handleSearch}
         />
       </div>
       
-      <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto scrollbar-none">
+      <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto no-scrollbar">
         {stockSectors.map((sector) => (
           <Button
             key={sector}
             variant={selectedSector === sector ? "default" : "outline"}
             size="sm"
             onClick={() => setSelectedSector(sector)}
-            className="text-nowrap"
+            className="text-nowrap whitespace-nowrap premium-shadow-sm"
           >
             {sector}
           </Button>
@@ -232,17 +232,17 @@ const Stocks = () => {
             <div className="grid grid-cols-1 gap-4">
               {filteredStocks.map((stock) => (
                 <Link to={`/stocks/${stock.symbol}`} key={stock.symbol}>
-                  <Card className="stock-card">
+                  <Card className="premium-card overflow-hidden">
                     <CardContent className="p-4">
                       <div className="flex flex-col sm:flex-row justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <div>
                               <div className="flex items-center gap-2">
-                                <h2 className="text-lg font-bold">{stock.symbol}</h2>
-                                <Badge variant="outline">{stock.sector}</Badge>
+                                <h2 className="text-lg font-semibold">{stock.symbol}</h2>
+                                <Badge variant="outline" className="badge-premium">{stock.sector}</Badge>
                               </div>
-                              <p className="text-sm text-muted-foreground">{stock.name}</p>
+                              <p className="text-sm text-muted-foreground font-text">{stock.name}</p>
                             </div>
                             <div className={`flex items-center ${
                               stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
@@ -260,20 +260,20 @@ const Stocks = () => {
                         </div>
                         
                         <div className="flex-1">
-                          <div className="text-xl font-bold mb-1">${stock.price.toFixed(2)}</div>
+                          <div className="text-xl font-bold mb-1 tracking-tight">${stock.price.toFixed(2)}</div>
                           <div className="grid grid-cols-3 gap-2 text-sm">
-                            <div className="flex items-center gap-1">
-                              <Building className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <Building className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className="text-muted-foreground">Cap:</span>
                               <span>{stock.marketCap}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <Clock className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className="text-muted-foreground">Vol:</span>
                               <span>{stock.volume}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className={`${
                                 stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
                               }`}>
@@ -294,7 +294,7 @@ const Stocks = () => {
                 <p className="text-muted-foreground">No stocks match your search criteria.</p>
                 <Button 
                   variant="outline" 
-                  className="mt-2"
+                  className="mt-2 premium-shadow-sm"
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedSector("All");
@@ -312,17 +312,17 @@ const Stocks = () => {
             <div className="grid grid-cols-1 gap-4">
               {trendingStocks.map((stock) => (
                 <Link to={`/stocks/${stock.symbol}`} key={stock.symbol}>
-                  <Card className="stock-card">
+                  <Card className="premium-card overflow-hidden">
                     <CardContent className="p-4">
                       <div className="flex flex-col sm:flex-row justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <div>
                               <div className="flex items-center gap-2">
-                                <h2 className="text-lg font-bold">{stock.symbol}</h2>
-                                <Badge variant="outline">{stock.sector}</Badge>
+                                <h2 className="text-lg font-semibold">{stock.symbol}</h2>
+                                <Badge variant="outline" className="badge-premium">{stock.sector}</Badge>
                               </div>
-                              <p className="text-sm text-muted-foreground">{stock.name}</p>
+                              <p className="text-sm text-muted-foreground font-text">{stock.name}</p>
                             </div>
                             <div className={`flex items-center ${
                               stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
@@ -340,20 +340,20 @@ const Stocks = () => {
                         </div>
                         
                         <div className="flex-1">
-                          <div className="text-xl font-bold mb-1">${stock.price.toFixed(2)}</div>
+                          <div className="text-xl font-bold mb-1 tracking-tight">${stock.price.toFixed(2)}</div>
                           <div className="grid grid-cols-3 gap-2 text-sm">
-                            <div className="flex items-center gap-1">
-                              <Building className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <Building className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className="text-muted-foreground">Cap:</span>
                               <span>{stock.marketCap}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <Clock className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className="text-muted-foreground">Vol:</span>
                               <span>{stock.volume}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                              <DollarSign className="h-3.5 w-3.5 text-muted-foreground hidden xs:block" />
                               <span className={`${
                                 stock.changePercent >= 0 ? "text-apple-gain" : "text-apple-loss"
                               }`}>

@@ -38,29 +38,29 @@ const Profile = () => {
   
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      <h1 className="text-3xl font-bold">Profile</h1>
+      <h1 className="heading-lg text-gradient">Profile</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         <div className="md:col-span-4 space-y-6">
-          <Card className="shadow-md">
+          <Card className="premium-card overflow-hidden">
             <CardHeader className="text-center">
               <div className="flex justify-center mb-4">
-                <Avatar className="h-24 w-24">
+                <Avatar className="h-24 w-24 premium-shadow">
                   <AvatarImage src={mockProfile.avatar} alt={mockProfile.name} />
                   <AvatarFallback>{mockProfile.name.substring(0, 2)}</AvatarFallback>
                 </Avatar>
               </div>
-              <CardTitle className="text-2xl">{mockProfile.name}</CardTitle>
-              <CardDescription>{mockProfile.email}</CardDescription>
+              <CardTitle className="heading-md">{mockProfile.name}</CardTitle>
+              <CardDescription className="font-text">{mockProfile.email}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Member Since</p>
+                  <p className="text-sm text-muted-foreground font-text">Member Since</p>
                   <p className="font-medium">{mockProfile.joinedDate}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Investment Goal</p>
+                  <p className="text-sm text-muted-foreground font-text">Investment Goal</p>
                   <p className="font-medium">{mockProfile.investmentGoal}</p>
                 </div>
               </div>
@@ -97,7 +97,7 @@ const Profile = () => {
                 <h3 className="font-medium mb-2">Favorite Sectors</h3>
                 <div className="flex flex-wrap gap-2">
                   {mockProfile.favoriteSectors.map((sector) => (
-                    <Badge key={sector} variant="secondary">
+                    <Badge key={sector} variant="secondary" className="badge-premium">
                       {sector}
                     </Badge>
                   ))}
@@ -105,22 +105,22 @@ const Profile = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full premium-shadow-sm">
                 <Settings className="mr-2 h-4 w-4" />
                 Edit Profile
               </Button>
             </CardFooter>
           </Card>
           
-          <Card className="shadow-md">
+          <Card className="premium-card overflow-hidden">
             <CardHeader>
-              <CardTitle className="text-xl">Settings</CardTitle>
+              <CardTitle className="heading-sm">Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="currency">Currency</Label>
                 <Select value={currency} onValueChange={setCurrency}>
-                  <SelectTrigger id="currency">
+                  <SelectTrigger id="currency" className="apple-input">
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
@@ -136,7 +136,7 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="dark-mode">Dark Mode</Label>
-                  <p className="text-sm text-muted-foreground">Switch between light and dark themes</p>
+                  <p className="text-sm text-muted-foreground font-text">Switch between light and dark themes</p>
                 </div>
                 <Switch
                   id="dark-mode"
@@ -148,7 +148,7 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="notifications">Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive price alerts and portfolio updates</p>
+                  <p className="text-sm text-muted-foreground font-text">Receive price alerts and portfolio updates</p>
                 </div>
                 <Switch
                   id="notifications"
@@ -174,13 +174,13 @@ const Profile = () => {
             </TabsList>
             
             <TabsContent value="timeline" className="space-y-4">
-              <Card className="shadow-md">
+              <Card className="premium-card overflow-hidden">
                 <CardHeader>
-                  <CardTitle className="text-xl">Investment Journey</CardTitle>
+                  <CardTitle className="heading-sm">Investment Journey</CardTitle>
                   <CardDescription>Track your progress as an investor</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative pl-6 md:pl-6 border-l-2 border-border space-y-6 md:space-y-8">
+                  <div className="relative pl-6 md:pl-8 border-l-2 border-border space-y-6 md:space-y-8">
                     {mockProfile.milestones.map((milestone, index) => (
                       <div key={index} className="relative">
                         <div className={`absolute -left-[25px] top-0 w-10 h-10 md:w-12 md:h-12 rounded-full ${milestoneColors[index % milestoneColors.length]} flex items-center justify-center shadow-md`}>
@@ -210,10 +210,10 @@ const Profile = () => {
             </TabsContent>
             
             <TabsContent value="transactions" className="space-y-4">
-              <Card className="shadow-md">
+              <Card className="premium-card overflow-hidden">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl">Transaction History</CardTitle>
+                    <CardTitle className="heading-sm">Transaction History</CardTitle>
                     <CardDescription>Record of your past investment activities</CardDescription>
                   </div>
                   <ClipboardList className="h-5 w-5 text-primary" />
@@ -221,7 +221,7 @@ const Profile = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {mockTransactions.map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-secondary/30 transition-colors">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-md flex items-center justify-center ${
                             transaction.type === "buy" ? "bg-apple-gain/10 text-apple-gain" : "bg-apple-loss/10 text-apple-loss"
@@ -249,7 +249,7 @@ const Profile = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                  <Button variant="outline">
+                  <Button variant="outline" className="premium-shadow-sm">
                     Download CSV
                   </Button>
                 </CardFooter>

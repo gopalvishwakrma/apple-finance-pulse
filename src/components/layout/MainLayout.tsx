@@ -16,7 +16,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   useEffect(() => {
     // Check for saved theme preference
-    const savedTheme = localStorage.getItem("theme") || "light";
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" || "light";
     setTheme(savedTheme);
     document.documentElement.classList.toggle("dark", savedTheme === "dark");
   }, []);

@@ -63,13 +63,13 @@ const Dashboard = () => {
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <h1 className="heading-lg text-gradient">Financial Overview</h1>
         <div className="flex items-center gap-2">
-          <Toggle pressed={theme === "dark"} onPressedChange={toggleTheme}>
+          <Toggle pressed={theme === "dark"} onPressedChange={toggleTheme} className="premium-shadow-sm">
             {theme === "light" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Toggle>
-          <Button variant="outline" size="sm">
-            <TrendingUp className="mr-2 h-4 w-4" />
+          <Button variant="outline" size="sm" className="gap-1.5 premium-shadow-sm">
+            <TrendingUp className="h-4 w-4" />
             View Reports
           </Button>
         </div>
@@ -77,18 +77,18 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {quickStats.map((stat, i) => (
-          <Card key={i} className="shadow-sm hover:shadow-md transition-shadow">
+          <Card key={i} className="premium-card overflow-hidden">
             <CardContent className="p-4">
               <div className="flex justify-between items-start">
-                <p className="text-sm text-muted-foreground">{stat.title}</p>
+                <p className="text-sm text-muted-foreground font-text">{stat.title}</p>
                 {stat.isPositive ? (
                   <ArrowUpRight className="text-apple-gain" size={18} />
                 ) : (
                   <ArrowDownRight className="text-apple-loss" size={18} />
                 )}
               </div>
-              <p className="text-2xl font-bold mt-1">{stat.value}</p>
-              <p className={cn("text-sm mt-1", stat.isPositive ? "text-apple-gain" : "text-apple-loss")}>
+              <p className="text-2xl font-semibold mt-1 tracking-tight">{stat.value}</p>
+              <p className={cn("text-sm mt-1 font-medium", stat.isPositive ? "text-apple-gain" : "text-apple-loss")}>
                 {stat.change}
               </p>
             </CardContent>
